@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router"
 import { allArticles } from "content-collections"
-import { MDXContent } from "@content-collections/mdx/react"
+import { useMDXComponent } from "@content-collections/mdx/react"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
@@ -20,6 +20,7 @@ export const Route = createFileRoute("/articles/$slug")({
 
 function ArticlePage() {
   const { article } = Route.useLoaderData()
+  const MDXContent = useMDXComponent(article.mdx)
 
   const relatedArticles = allArticles.filter((a) =>
     article.related.includes(a.slug)

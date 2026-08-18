@@ -17,10 +17,11 @@ const articles = defineCollection({
   }),
   transform: async (document, context) => {
     const mdx = await compileMDX(context, document)
+    const slug = document._meta.fileName.replace(/\.mdx$/, "")
     return {
       ...document,
       mdx,
-      slug: document._meta.path,
+      slug,
     }
   },
 })

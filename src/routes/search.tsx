@@ -3,7 +3,7 @@ import { allArticles } from "content-collections"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
-import { useState, useMemo } from "react"
+import { useState, useMemo, useMemo as useMemoOnce } from "react"
 import MiniSearch from "minisearch"
 import { Search } from "lucide-react"
 
@@ -11,34 +11,40 @@ export const Route = createFileRoute("/search")({
   component: SearchPage,
 })
 
-const searchIndex = new MiniSearch({
-  fields: ["title", "description", "tags", "category"],
-  storeFields: ["title", "description", "slug", "category", "tags"],
-  searchOptions: {
-    fuzzy: 0.2,
-    prefix: true,
-  },
-})
+function createSearchIndex() {
+  const index = new MiniSearch({
+    fields: ["title", "description", "tags", "category"],
+    storeFields: ["title", "description", "slug", "category", "tags"],
+    searchOptions: {
+      fuzzy: 0.2,
+      prefix: true,
+    },
+  })
 
-// Index all articles
-searchIndex.addAll(
-  allArticles.map((article) => ({
-    id: article.slug,
-    title: article.title,
-    description: article.description,
-    slug: article.slug,
-    category: article.category,
-    tags: article.tags.join(" "),
-  }))
-)
+  if (allArticles && allArticles.length > 0) {
+    index.addAll(
+      allArticles.map((article) => ({
+        id: article.slug,
+        title: article.title,
+        description: article.description,
+        slug: article.slug,
+        category: article.category,
+        tags: article.tags.join(" "),
+      }))
+    )
+  }
+
+  return index
+}
 
 function SearchPage() {
   const [query, setQuery] = useState("")
+  const searchIndex = useMemo(() => createSearchIndex(), [])
 
   const results = useMemo(() => {
     if (!query.trim()) return []
     return searchIndex.search(query)
-  }, [query])
+  }, [query, searchIndex])
 
   return (
     <div className="container mx-auto px-4 py-8">
