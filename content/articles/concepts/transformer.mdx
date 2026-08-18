@@ -1,0 +1,136 @@
+---
+title: "Transformer"
+description: "The neural network architecture that revolutionized natural language processing and powers modern AI"
+category: "concepts"
+tags: ["architecture", "deep-learning", "nlp", "attention", "neural-network"]
+related: ["attention-is-all-you-need", "gpt-4", "llama"]
+date: "2023-01-01"
+---
+
+# Transformer
+
+The transformer is a neural network architecture introduced in the 2017 paper "Attention Is All You Need." It has become the foundation for virtually all modern large language models and has revolutionized natural language processing.
+
+## Key Innovation: Self-Attention
+
+The transformer's core innovation is the self-attention mechanism, which allows the model to weigh the importance of different parts of the input when processing each element:
+
+```python
+import torch
+import torch.nn as nn
+
+class SelfAttention(nn.Module):
+    def __init__(self, embed_size, heads):
+        super().__init__()
+        self.heads = heads
+        self.head_dim = embed_size // heads
+        
+        self.values = nn.Linear(self.head_dim, self.head_dim, bias=False)
+        self.keys = nn.Linear(self.head_dim, self.head_dim, bias=False)
+        self.queries = nn.Linear(self.head_dim, self.head_dim, bias=False)
+        self.fc_out = nn.Linear(heads * self.head_dim, embed_size)
+    
+    def forward(self, values, keys, query, mask):
+        N = query.shape[0]
+        value_len, key_len, query_len = values.shape[1], keys.shape[1], query.shape[1]
+        
+        # Split the embedding into self.heads different pieces
+        values = values.reshape(N, value_len, self.heads, self.head_dim)
+        keys = keys.reshape(N, key_len, self.heads, self.head_dim)
+        query = query.reshape(N, query_len, self.heads, self.head_dim)
+        
+        # Attention scores
+        energy = torch.einsum("nqhd,nkhd->nhqk", [query, keys])
+        
+        if mask is not None:
+            energy = energy.masked_fill(mask == 0, float("-1e20"))
+        
+        attention = torch.softmax(energy / (self.head_dim ** 0.5), dim=3)
+        
+        out = torch.einsum("nhqk,nvhd->nqhd", [attention, values]).reshape(
+            N, query_len, self.heads * self.head_dim
+        )
+        
+        return self.fc_out(out)
+```
+
+## Architecture Components
+
+### Encoder
+
+The encoder processes the input sequence:
+
+```python
+class TransformerEncoder(nn.Module):
+    def __init__(self, embed_size, num_layers, heads, forward_expansion, dropout):
+        super().__init__()
+        self.layers = nn.ModuleList([
+            TransformerBlock(embed_size, heads, forward_expansion, dropout)
+            for _ in range(num_layers)
+        ])
+        self.norm = nn.LayerNorm(embed_size)
+    
+    def forward(self, x, mask):
+        for layer in self.layers:
+            x = layer(x, x, x, mask)
+        return self.norm(x)
+```
+
+### Decoder
+
+The decoder generates the output sequence:
+
+```python
+class TransformerDecoder(nn.Module):
+    def __init__(self, embed_size, num_layers, heads, forward_expansion, dropout):
+        super().__init__()
+        self.layers = nn.ModuleList([
+            TransformerBlock(embed_size, heads, forward_expansion, dropout)
+            for _ in range(num_layers)
+        ])
+        self.norm = nn.LayerNorm(embed_size)
+    
+    def forward(self, x, enc_out, src_mask, trg_mask):
+        for layer in self.layers:
+            x = layer(x, enc_out, enc_out, src_mask)
+        return self.norm(x)
+```
+
+## Positional Encoding
+
+Since transformers process all positions simultaneously, positional encoding provides sequence order information:
+
+```python
+class PositionalEncoding(nn.Module):
+    def __init__(self, d_model, max_len=5000):
+        super().__init__()
+        pe = torch.zeros(max_len, d_model)
+        position = torch.arange(0, max_len, dtype=torch.float).unsqueeze(1)
+        div_term = torch.exp(
+            torch.arange(0, d_model, 2).float() * (-math.log(10000.0) / d_model)
+        )
+        pe[:, 0::2] = torch.sin(position * div_term)
+        pe[:, 1::2] = torch.cos(position * div_term)
+        pe = pe.unsqueeze(0).transpose(0, 1)
+        self.register_buffer("pe", pe)
+    
+    def forward(self, x):
+        return x + self.pe[:x.size(0), :]
+```
+
+## Why Transformers Won
+
+1. **Parallelization**: Unlike RNNs, transformers process all positions simultaneously
+2. **Long-range Dependencies**: Attention mechanism captures relationships across the entire sequence
+3. **Scalability**: Performance improves predictably with more data and compute
+4. **Transfer Learning**: Pre-trained transformers fine-tune well to downstream tasks
+
+## Impact
+
+Transformers have enabled:
+
+- Large language models (GPT, BERT, Llama)
+- Vision transformers (ViT)
+- Multimodal models (CLIP, DALL-E)
+- Speech models (Whisper)
+- Code models (Codex, CodeLlama)

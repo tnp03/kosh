@@ -1,0 +1,91 @@
+---
+title: "Hugging Face"
+description: "The leading platform for sharing, discovering, and deploying machine learning models and datasets"
+category: "tools"
+tags: ["platform", "models", "datasets", "transformers", "community"]
+related: ["llama", "transformer", "fine-tuning"]
+date: "2024-03-01"
+---
+
+# Hugging Face
+
+Hugging Face is a technology company that provides a platform for sharing, discovering, and deploying machine learning models. It has become the GitHub of machine learning.
+
+## Key Components
+
+### Model Hub
+
+The Model Hub hosts over 500,000 models across various domains:
+
+```python
+from transformers import pipeline
+
+# Load a pre-trained model
+classifier = pipeline("sentiment-analysis")
+result = classifier("I love this product!")
+print(result)
+# [{'label': 'POSITIVE', 'score': 0.9998}]
+```
+
+### Datasets
+
+Hugging Face Datasets provides access to thousands of datasets:
+
+```python
+from datasets import load_dataset
+
+# Load a dataset
+dataset = load_dataset("imdb")
+print(dataset["train"][0])
+```
+
+### Transformers Library
+
+The core library for working with transformer models:
+
+```python
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
+import torch
+
+# Load model and tokenizer
+tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
+model = AutoModelForSequenceClassification.from_pretrained("bert-base-uncased")
+
+# Tokenize input
+inputs = tokenizer("Hello, world!", return_tensors="pt")
+
+# Get predictions
+with torch.no_grad():
+    outputs = model(**inputs)
+```
+
+## Features
+
+- **Model Sharing**: Upload and share models with the community
+- **Model Cards**: Documentation for models including usage, limitations, and biases
+- **Spaces**: Deploy and share ML demos
+- **Inference API**: Hosted model inference
+- **AutoTrain**: No-code model training
+
+## Popular Libraries
+
+| Library | Purpose |
+|---------|---------|
+| Transformers | State-of-the-art NLP, CV, Audio |
+| Datasets | Loading and processing datasets |
+| Tokenizers | Fast tokenization |
+| Accelerate | Distributed training |
+| PEFT | Parameter-efficient fine-tuning |
+
+## Use Cases
+
+- **Research**: Access to state-of-the-art models
+- **Prototyping**: Quick experimentation with different models
+- **Production**: Deploying models at scale
+- **Education**: Learning about machine learning
+
+## Getting Started
+
+```bash
+pip install transformers datasets
+```

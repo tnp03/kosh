@@ -1,0 +1,24 @@
+{
+  "categories": [
+    {
+      "name": "Models",
+      "slug": "models",
+      "description": "GPT-4, Claude, Llama, and other large language models"
+    },
+    {
+      "name": "Tools",
+      "slug": "tools",
+      "description": "Frameworks, platforms, and utilities for building AI applications"
+    },
+    {
+      "name": "Concepts",
+      "slug": "concepts",
+      "description": "Core ideas and architectures behind modern AI"
+    },
+    {
+      "name": "Research",
+      "slug": "research",
+      "description": "Landmark papers and breakthroughs in AI research"
+    }
+  ]
+}

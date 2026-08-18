@@ -1,0 +1,110 @@
+---
+title: "Ollama"
+description: "Run large language models locally on your machine with simple CLI commands"
+category: "tools"
+tags: ["local", "inference", "cli", "llama", "quantization"]
+related: ["llama", "vllm", "transformer"]
+date: "2024-04-01"
+---
+
+# Ollama
+
+Ollama is a tool that allows you to run large language models locally on your machine. It simplifies the process of downloading, setting up, and running LLMs with a simple CLI interface.
+
+## Key Features
+
+- **Simple CLI**: Run models with single commands
+- **Local Inference**: No internet connection required after download
+- **Model Library**: Access to popular open-source models
+- **Quantization**: Efficient model compression for consumer hardware
+- **API Server**: OpenAI-compatible API for integration
+
+## Getting Started
+
+### Installation
+
+```bash
+# macOS
+brew install ollama
+
+# Linux
+curl -fsSL https://ollama.com/install.sh | sh
+
+# Windows
+# Download from https://ollama.com/download
+```
+
+### Running Models
+
+```bash
+# Download and run a model
+ollama run llama3.1
+
+# Run a specific version
+ollama run llama3.1:70b
+
+# List available models
+ollama list
+
+# Pull a model without running
+ollama pull mistral
+```
+
+## Model Library
+
+Ollama supports many popular models:
+
+| Model | Parameters | Best For |
+|-------|-----------|----------|
+| Llama 3.1 | 8B, 70B, 405B | General purpose |
+| Mistral | 7B | Fast inference |
+| Code Llama | 7B, 13B, 70B | Code generation |
+| Phi-3 | 3.8B, 14B | Small but capable |
+| Gemma | 2B, 7B | Google's models |
+
+## API Usage
+
+Ollama provides an OpenAI-compatible API:
+
+```python
+import openai
+
+client = openai.OpenAI(
+    base_url="http://localhost:11434/v1",
+    api_key="ollama"
+)
+
+response = client.chat.completions.create(
+    model="llama3.1",
+    messages=[
+        {"role": "user", "content": "Hello!"}
+    ]
+)
+```
+
+## Custom Models
+
+Create custom models with Modelfiles:
+
+```dockerfile
+# Modelfile
+FROM llama3.1
+
+SYSTEM "You are a helpful coding assistant."
+
+PARAMETER temperature 0.7
+PARAMETER num_ctx 4096
+```
+
+```bash
+# Create custom model
+ollama create coding-assistant -f Modelfile
+```
+
+## Use Cases
+
+- **Development**: Test models locally before deployment
+- **Privacy**: Keep sensitive data on your machine
+- **Offline**: Use AI without internet connection
+- **Learning**: Experiment with different models
+- **Edge Deployment**: Run models on edge devices

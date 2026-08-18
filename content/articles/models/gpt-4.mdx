@@ -1,0 +1,63 @@
+---
+title: "GPT-4"
+description: "OpenAI's most advanced large language model, capable of reasoning, coding, and multimodal understanding"
+category: "models"
+tags: ["language-model", "openai", "multimodal", "reasoning"]
+related: ["claude", "llama", "transformer"]
+date: "2024-03-15"
+---
+
+# GPT-4
+
+GPT-4 is a large multimodal model developed by OpenAI, representing a significant advancement over its predecessor GPT-3.5. It can process both text and images as input, and generates human-like text as output.
+
+## Key Capabilities
+
+- **Multimodal Input**: Accepts both text and images, enabling visual understanding tasks
+- **Enhanced Reasoning**: Improved performance on complex reasoning tasks across multiple domains
+- **Code Generation**: Strong capability in writing and debugging code in various programming languages
+- **Longer Context**: Supports up to 128,000 tokens of context, allowing processing of long documents
+
+## Architecture
+
+GPT-4 is built on the transformer architecture, the same foundational architecture that powers most modern large language models. While OpenAI has not disclosed specific details about the model's size, it is believed to use a mixture-of-experts (MoE) approach.
+
+```python
+# Example API usage
+import openai
+
+response = openai.ChatCompletion.create(
+    model="gpt-4",
+    messages=[
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "Explain quantum computing in simple terms."}
+    ]
+)
+```
+
+## Performance
+
+GPT-4 demonstrated impressive performance on various benchmarks:
+
+- **Bar Exam**: Scored in the top 10% of test takers
+- **SAT Math**: Achieved a score of 700/800
+- **AP Calculus**: Scored 5 out of 5
+
+## Limitations
+
+Despite its capabilities, GPT-4 has several limitations:
+
+1. **Hallucination**: Can still generate plausible-sounding but incorrect information
+2. **Knowledge Cutoff**: Training data has a cutoff date, limiting knowledge of recent events
+3. **Reasoning**: While improved, still struggles with complex multi-step reasoning
+4. **Cost**: Significantly more expensive to run than smaller models
+
+## Impact
+
+GPT-4 has been widely adopted across industries, powering applications in:
+
+- Customer service and support
+- Content creation and editing
+- Code development and debugging
+- Education and tutoring
+- Research assistance

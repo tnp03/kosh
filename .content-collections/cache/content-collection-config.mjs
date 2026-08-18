@@ -1,0 +1,32 @@
+// content-collections.ts
+import { defineCollection, defineConfig } from "@content-collections/core";
+import { compileMDX } from "@content-collections/mdx";
+import { z } from "zod";
+var articles = defineCollection({
+  name: "articles",
+  directory: "content/articles",
+  include: "**/*.mdx",
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    category: z.enum(["models", "tools", "concepts", "research"]),
+    tags: z.array(z.string()).default([]),
+    related: z.array(z.string()).default([]),
+    date: z.string().optional(),
+    content: z.string()
+  }),
+  transform: async (document, context) => {
+    const mdx = await compileMDX(context, document);
+    return {
+      ...document,
+      mdx,
+      slug: document._meta.path
+    };
+  }
+});
+var content_collections_default = defineConfig({
+  content: [articles]
+});
+export {
+  content_collections_default as default
+};

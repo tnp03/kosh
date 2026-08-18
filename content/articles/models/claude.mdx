@@ -1,0 +1,68 @@
+---
+title: "Claude"
+description: "Anthropic's AI assistant built to be helpful, harmless, and honest using Constitutional AI"
+category: "models"
+tags: ["language-model", "anthropic", "safety", "constitutional-ai"]
+related: ["gpt-4", "llama", "transformer"]
+date: "2024-04-01"
+---
+
+# Claude
+
+Claude is a family of large language models developed by Anthropic, designed with safety and helpfulness as core principles. The models use Constitutional AI (CAI) training methodology.
+
+## Key Features
+
+- **Constitutional AI**: Trained using a set of principles to be helpful, harmless, and honest
+- **Large Context Window**: Supports up to 200,000 tokens, enabling analysis of very long documents
+- **Strong Reasoning**: Excels at complex analysis, writing, and coding tasks
+- **Multimodal**: Claude 3 models can process images alongside text
+
+## Constitutional AI
+
+Anthropic's Constitutional AI approach involves:
+
+1. **Self-Improvement**: The model critiques its own responses based on a set of principles
+2. **RLHF Alternative**: Reduces reliance on human feedback for alignment
+3. **Transparency**: The "constitution" governing the model's behavior is publicly available
+
+```python
+# Example API usage
+import anthropic
+
+client = anthropic.Anthropic()
+message = client.messages.create(
+    model="claude-sonnet-4-20250514",
+    max_tokens=1024,
+    messages=[
+        {"role": "user", "content": "What are the key principles of Constitutional AI?"}
+    ]
+)
+```
+
+## Model Variants
+
+| Model | Best For | Context Window |
+|-------|----------|----------------|
+| Claude 3.5 Sonnet | Balanced performance | 200K tokens |
+| Claude 3 Opus | Complex reasoning | 200K tokens |
+| Claude 3 Haiku | Fast, lightweight | 200K tokens |
+
+## Safety Features
+
+Claude includes several safety-oriented features:
+
+- **Refusal Training**: Declines to help with harmful or illegal activities
+- **Honesty**: Attempts to express uncertainty rather than guessing
+- **Transparency**: Explains its reasoning and limitations
+- **Privacy**: Designed to protect user data and privacy
+
+## Use Cases
+
+Claude is particularly well-suited for:
+
+- Document analysis and summarization
+- Code review and development
+- Research and academic work
+- Customer support
+- Creative writing

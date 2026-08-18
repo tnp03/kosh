@@ -1,0 +1,70 @@
+---
+title: "Llama"
+description: "Meta's open-source large language model family, enabling research and commercial applications"
+category: "models"
+tags: ["language-model", "meta", "open-source", "llama"]
+related: ["gpt-4", "claude", "transformer"]
+date: "2024-07-01"
+---
+
+# Llama
+
+Llama (Large Language Model Meta AI) is a family of open-source large language models developed by Meta AI. Unlike proprietary models from OpenAI and Anthropic, Llama models are freely available for research and commercial use.
+
+## Key Features
+
+- **Open Source**: Weights and architecture publicly available
+- **Efficient**: Designed to run on consumer hardware
+- **Customizable**: Can be fine-tuned for specific tasks
+- **Community**: Large ecosystem of tools and fine-tunes
+
+## Model Versions
+
+| Version | Parameters | Best For |
+|---------|-----------|----------|
+| Llama 3.1 | 8B, 70B, 405B | General purpose |
+| Llama 3.2 | 1B, 3B, 11B, 90B | Multimodal, edge devices |
+| Llama 3.3 | 70B | Balanced performance |
+
+## Architecture
+
+Llama uses the transformer architecture with several optimizations:
+
+```python
+# Example usage with transformers library
+from transformers import AutoTokenizer, AutoModelForCausalLM
+
+tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-3.1-8B")
+model = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-3.1-8B")
+
+input_text = "The future of AI is"
+inputs = tokenizer(input_text, return_tensors="pt")
+outputs = model.generate(**inputs, max_new_tokens=100)
+print(tokenizer.decode(outputs[0], skip_special_tokens=True))
+```
+
+## Fine-tuning
+
+Llama models can be fine-tuned for specific use cases:
+
+1. **LoRA**: Low-Rank Adaptation for efficient fine-tuning
+2. **QLoRA**: Quantized LoRA for memory-constrained environments
+3. **Full Fine-tuning**: Complete model retraining for maximum customization
+
+## Community Ecosystem
+
+The Llama ecosystem includes:
+
+- **Hugging Face**: Thousands of fine-tuned models
+- **Ollama**: Easy local deployment
+- **vLLM**: High-performance inference serving
+- **LangChain**: Integration with AI application frameworks
+
+## Impact
+
+Llama has significantly impacted the AI landscape by:
+
+- Democratizing access to large language models
+- Enabling research without API access
+- Fostering innovation in model optimization
+- Creating a competitive alternative to proprietary models

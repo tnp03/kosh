@@ -1,0 +1,30 @@
+node_modules
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+.DS_Store
+.cache
+.env
+.env.local
+.vercel
+.output
+.nitro
+/build/
+/api/
+/server/build
+/public/build
+
+# TanStack Start
+.tanstack
+.routeTree.gen.ts
+
+# Cloudflare
+.wrangler
+.dev.vars
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo

@@ -1,0 +1,107 @@
+---
+title: "LangChain"
+description: "A framework for building applications powered by language models through composable chains and agents"
+category: "tools"
+tags: ["framework", "agents", "chains", "python", "javascript"]
+related: ["huggingface", "transformer", "rag"]
+date: "2024-02-01"
+---
+
+# LangChain
+
+LangChain is an open-source framework for developing applications powered by large language models. It provides a set of tools for building complex AI workflows through composable components.
+
+## Core Concepts
+
+### Chains
+
+Chains are sequences of calls to LLMs or other utilities:
+
+```python
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+
+# Simple chain
+prompt = ChatPromptTemplate.from_template(
+    "Tell me a short joke about {topic}"
+)
+model = ChatOpenAI(model="gpt-4")
+output_parser = StrOutputParser()
+
+chain = prompt | model | output_parser
+result = chain.invoke({"topic": "programming"})
+```
+
+### Agents
+
+Agents use LLMs to determine which actions to take:
+
+```python
+from langchain.agents import AgentExecutor, create_openai_tools_agent
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+
+# Define tools
+tools = [search_tool, calculator_tool]
+
+# Create agent
+prompt = ChatPromptTemplate.from_messages([
+    ("system", "You are a helpful assistant."),
+    ("human", "{input}"),
+    ("placeholder", "{agent_scratchpad}"),
+])
+
+llm = ChatOpenAI(model="gpt-4")
+agent = create_openai_tools_agent(llm, tools, prompt)
+executor = AgentExecutor(agent=agent, tools=tools)
+```
+
+### Retrieval
+
+LangChain provides tools for building retrieval-augmented generation (RAG) systems:
+
+```python
+from langchain_community.vectorstores import FAISS
+from langchain_openai import OpenAIEmbeddings
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.runnables import RunnablePassthrough
+
+# Create vector store
+vectorstore = FAISS.from_documents(documents, OpenAIEmbeddings())
+retriever = vectorstore.as_retriever()
+
+# RAG chain
+prompt = ChatPromptTemplate.from_template(
+    "Answer the question based on the context: {context}\n\nQuestion: {question}"
+)
+
+chain = (
+    {"context": retriever, "question": RunnablePassthrough()}
+    | prompt
+    | ChatOpenAI(model="gpt-4")
+    | StrOutputParser()
+)
+```
+
+## Integrations
+
+LangChain integrates with numerous services:
+
+- **LLMs**: OpenAI, Anthropic, Google, Cohere, local models
+- **Vector Stores**: Pinecone, Weaviate, Chroma, FAISS
+- **Tools**: Web search, calculators, code execution
+- **Document Loaders**: PDFs, websites, databases, APIs
+
+## Use Cases
+
+- **Chatbots**: Building conversational AI systems
+- **RAG Applications**: Question answering over custom documents
+- **Agents**: Autonomous systems that can use tools
+- **Data Analysis**: Extracting insights from unstructured data
+
+## Getting Started
+
+```bash
+pip install langchain langchain-openai
+```

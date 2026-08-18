@@ -1,0 +1,168 @@
+---
+title: "Fine-tuning"
+description: "Adapting pre-trained language models to specific tasks and domains through additional training"
+category: "concepts"
+tags: ["training", "transfer-learning", "lora", "qlora", "adaptation"]
+related: ["transformer", "llama", "huggingface"]
+date: "2024-02-01"
+---
+
+# Fine-tuning
+
+Fine-tuning is the process of taking a pre-trained language model and further training it on a smaller, task-specific dataset. This allows the model to adapt its general knowledge to particular domains or use cases.
+
+## Why Fine-tune?
+
+1. **Domain Adaptation**: Specialize models for specific industries or topics
+2. **Task Optimization**: Improve performance on specific tasks
+3. **Style Transfer**: Adjust output style to match requirements
+4. **Cost Efficiency**: Smaller fine-tuned models can outperform larger general models
+
+## Fine-tuning Approaches
+
+### Full Fine-tuning
+
+Update all model parameters:
+
+```python
+from transformers import AutoModelForCausalLM, AutoTokenizer, TrainingArguments
+from trl import SFTTrainer
+
+model = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-3.1-8B")
+tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-3.1-8B")
+
+training_args = TrainingArguments(
+    output_dir="./results",
+    num_train_epochs=3,
+    per_device_train_batch_size=4,
+    learning_rate=2e-5,
+    weight_decay=0.01,
+)
+
+trainer = SFTTrainer(
+    model=model,
+    args=training_args,
+    train_dataset=dataset,
+    tokenizer=tokenizer,
+)
+
+trainer.train()
+```
+
+### LoRA (Low-Rank Adaptation)
+
+Efficient fine-tuning by updating only low-rank matrices:
+
+```python
+from peft import LoraConfig, get_peft_model
+
+lora_config = LoraConfig(
+    r=16,  # rank
+    lora_alpha=32,
+    target_modules=["q_proj", "v_proj", "k_proj", "o_proj"],
+    lora_dropout=0.05,
+    bias="none",
+    task_type="CAUSAL_LM"
+)
+
+model = get_peft_model(model, lora_config)
+model.print_trainable_parameters()
+# trainable params: 13,631,488 || all params: 8,040,346,624 || trainable%: 0.17
+```
+
+### QLoRA (Quantized LoRA)
+
+Fine-tune quantized models for memory-constrained environments:
+
+```python
+from transformers import BitsAndBytesConfig
+import torch
+
+bnb_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_quant_type="nf4",
+    bnb_4bit_compute_dtype=torch.float16,
+    bnb_4bit_use_double_quant=True,
+)
+
+model = AutoModelForCausalLM.from_pretrained(
+    "meta-llama/Llama-3.1-8B",
+    quantization_config=bnb_config,
+    device_map="auto"
+)
+```
+
+## Data Preparation
+
+### Format Data
+
+Prepare training data in the correct format:
+
+```python
+# Chat format
+def format_conversation(example):
+    messages = [
+        {"role": "system", "content": example["system"]},
+        {"role": "user", "content": example["question"]},
+        {"role": "assistant", "content": example["answer"]}
+    ]
+    return {"text": tokenizer.apply_chat_template(messages, tokenize=False)}
+```
+
+### Quality Data
+
+Key principles for fine-tuning data:
+
+1. **Consistency**: Ensure consistent formatting and style
+2. **Diversity**: Cover various scenarios and edge cases
+3. **Accuracy**: Verify correctness of training examples
+4. **Volume**: Typically 1,000-100,000 examples depending on task
+
+## Evaluation
+
+Monitor training progress:
+
+```python
+from transformers import EvaluationStrategy
+
+training_args = TrainingArguments(
+    evaluation_strategy="steps",
+    eval_steps=100,
+    load_best_model_at_end=True,
+    metric_for_best_model="eval_loss",
+)
+```
+
+## Common Challenges
+
+### Overfitting
+
+When the model memorizes training data:
+
+- Use dropout and weight decay
+- Early stopping
+- Data augmentation
+- Reduce model capacity
+
+### Catastrophic Forgetting
+
+When the model loses general capabilities:
+
+- Use lower learning rates
+- Regularization techniques
+- Mix general and task-specific data
+
+### Hallucination
+
+When the model generates incorrect information:
+
+- Ground responses in provided context
+- Use retrieval-augmented generation
+- Validate against known facts
+
+## Tools and Frameworks
+
+- **Hugging Face TRL**: Transformer Reinforcement Learning
+- **Axolotl**: Fine-tuning framework
+- **LLaMA-Factory**: All-in-one fine-tuning solution
+- **Unsloth**: Fast fine-tuning with quantization
