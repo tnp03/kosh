@@ -5,7 +5,8 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { useState, useMemo, useMemo as useMemoOnce } from "react"
 import MiniSearch from "minisearch"
-import { Search } from "lucide-react"
+import { Search, ArrowLeft } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 export const Route = createFileRoute("/search")({
   component: SearchPage,
@@ -13,8 +14,8 @@ export const Route = createFileRoute("/search")({
 
 function createSearchIndex() {
   const index = new MiniSearch({
-    fields: ["title", "description", "tags", "category"],
-    storeFields: ["title", "description", "slug", "category", "tags"],
+    fields: ["title", "description", "tags"],
+    storeFields: ["title", "description", "slug", "tags"],
     searchOptions: {
       fuzzy: 0.2,
       prefix: true,
@@ -28,7 +29,6 @@ function createSearchIndex() {
         title: article.title,
         description: article.description,
         slug: article.slug,
-        category: article.category,
         tags: article.tags.join(" "),
       }))
     )
@@ -49,6 +49,12 @@ function SearchPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-2xl mx-auto">
+        <Link to="/graph">
+          <Button variant="ghost" className="mb-6 gap-2">
+            <ArrowLeft className="h-4 w-4" />
+            Back to Graph
+          </Button>
+        </Link>
         <div className="mb-8">
           <h1 className="text-3xl font-bold tracking-tight mb-4">Search</h1>
           <div className="relative">
@@ -76,7 +82,6 @@ function SearchPage() {
               <Card className="hover:bg-accent transition-colors">
                 <CardHeader>
                   <div className="flex items-center gap-2 mb-2">
-                    <Badge variant="secondary">{result.category}</Badge>
                   </div>
                   <CardTitle className="text-lg">{result.title}</CardTitle>
                   <CardDescription className="line-clamp-2">

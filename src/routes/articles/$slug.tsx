@@ -38,9 +38,11 @@ function ArticlePage() {
       <article>
         <header className="mb-8">
           <div className="flex items-center gap-2 mb-4">
-            <Link to="/categories/$category" params={{ category: article.category }}>
-              <Badge variant="secondary">{article.category}</Badge>
-            </Link>
+            {article.layers.map((layer) => (
+              <Link key={layer} to="/nodes/$slug" params={{ slug: layer }}>
+                <Badge variant="secondary">{layer}</Badge>
+              </Link>
+            ))}
             {article.date && (
               <span className="text-sm text-muted-foreground">{article.date}</span>
             )}
@@ -79,7 +81,7 @@ function ArticlePage() {
                 <Card className="h-full hover:bg-accent transition-colors">
                   <CardHeader>
                     <Badge variant="secondary" className="w-fit mb-2">
-                      {related.category}
+                      {related.layers[0]}
                     </Badge>
                     <CardTitle className="text-lg">{related.title}</CardTitle>
                     <CardDescription className="line-clamp-2">

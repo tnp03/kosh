@@ -7,9 +7,11 @@ import {
   createRootRoute,
 } from "@tanstack/react-router"
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools"
+import { TanStackDevtools } from "@tanstack/react-devtools"
 import * as React from "react"
 import { DefaultCatchBoundary } from "~/components/DefaultCatchBoundary"
 import { NotFound } from "~/components/NotFound"
+import { TooltipProvider } from "@/components/ui/tooltip"
 import appCss from "~/styles/globals.css?url"
 import { seo } from "~/utils/seo"
 import { Button } from "@/components/ui/button"
@@ -66,33 +68,48 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
+        <TooltipProvider>
         <div className="min-h-screen flex flex-col">
           <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="container mx-auto flex h-14 items-center px-4">
               <Link to="/" className="mr-6 flex items-center space-x-2">
+                <span className="text-lg">🧠</span>
                 <span className="font-bold text-xl">Kosh</span>
               </Link>
-              <nav className="flex items-center gap-6 text-sm">
+              <nav className="flex items-center gap-1 text-sm">
+                <Link
+                  to="/"
+                  className="px-3 py-1.5 rounded-full transition-colors hover:bg-accent text-foreground/60"
+                  activeProps={{ className: "bg-foreground text-background font-medium" }}
+                >
+                  Dashboard
+                </Link>
+                <Link
+                  to="/graph"
+                  className="px-3 py-1.5 rounded-full transition-colors hover:bg-accent text-foreground/60"
+                  activeProps={{ className: "bg-foreground text-background font-medium" }}
+                >
+                  Graph
+                </Link>
                 <Link
                   to="/articles"
-                  className="transition-colors hover:text-foreground/80 text-foreground/60"
-                  activeProps={{ className: "text-foreground font-medium" }}
+                  className="px-3 py-1.5 rounded-full transition-colors hover:bg-accent text-foreground/60"
+                  activeProps={{ className: "bg-foreground text-background font-medium" }}
                 >
                   Articles
                 </Link>
                 <Link
-                  to="/categories"
-                  className="transition-colors hover:text-foreground/80 text-foreground/60"
-                  activeProps={{ className: "text-foreground font-medium" }}
+                  to="/events"
+                  className="px-3 py-1.5 rounded-full transition-colors hover:bg-accent text-foreground/60"
+                  activeProps={{ className: "bg-foreground text-background font-medium" }}
                 >
-                  Categories
+                  Events
                 </Link>
               </nav>
               <div className="flex flex-1 items-center justify-end gap-2">
                 <Link to="/search">
                   <Button variant="ghost" size="sm" className="gap-2">
                     <Search className="h-4 w-4" />
-                    Search
                   </Button>
                 </Link>
               </div>
@@ -107,7 +124,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             </div>
           </footer>
         </div>
+        </TooltipProvider>
         <TanStackRouterDevtools position="bottom-right" />
+        <TanStackDevtools position="bottom-right" />
         <Scripts />
       </body>
     </html>

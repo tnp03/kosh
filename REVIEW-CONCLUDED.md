@@ -1,0 +1,1 @@
+Review complete. Schema migration category→layers fully applied across all 42 changed files. 12 TS module-resolve errors are Vite-runtime-only (plugin alias not applied by tsc). App works at npm run dev. Recommend adding tsconfig paths alias for IDE support.

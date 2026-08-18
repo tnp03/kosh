@@ -16,6 +16,11 @@ import { Route as SearchRouteImport } from './routes/search'
 import { Route as ArticlesIndexRouteImport } from './routes/articles/index'
 import { Route as ArticlesSlugRouteImport } from './routes/articles/$slug'
 import { Route as CategoriesCategoryRouteImport } from './routes/categories/$category'
+import { Route as EventsIndexRouteImport } from './routes/events/index'
+import { Route as GraphIndexRouteImport } from './routes/graph/index'
+import { Route as NodesSlugRouteImport } from './routes/nodes/$slug'
+import { Route as PrototypeAdminStudioRouteImport } from './routes/prototype/admin-studio'
+import { Route as SitesSlugRouteImport } from './routes/sites/$slug'
 import { Route as TagsTagRouteImport } from './routes/tags/$tag'
 
 const IndexRoute = IndexRouteImport.update({
@@ -53,6 +58,31 @@ const CategoriesCategoryRoute = CategoriesCategoryRouteImport.update({
   path: '/$category',
   getParentRoute: () => CategoriesRouteRoute,
 } as any)
+const EventsIndexRoute = EventsIndexRouteImport.update({
+  id: '/events/',
+  path: '/events/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GraphIndexRoute = GraphIndexRouteImport.update({
+  id: '/graph/',
+  path: '/graph/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NodesSlugRoute = NodesSlugRouteImport.update({
+  id: '/nodes/$slug',
+  path: '/nodes/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrototypeAdminStudioRoute = PrototypeAdminStudioRouteImport.update({
+  id: '/prototype/admin-studio',
+  path: '/prototype/admin-studio',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitesSlugRoute = SitesSlugRouteImport.update({
+  id: '/sites/$slug',
+  path: '/sites/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TagsTagRoute = TagsTagRouteImport.update({
   id: '/tags/$tag',
   path: '/tags/$tag',
@@ -66,8 +96,13 @@ export interface FileRoutesByFullPath {
   '/search': typeof SearchRoute
   '/articles/$slug': typeof ArticlesSlugRoute
   '/categories/$category': typeof CategoriesCategoryRoute
+  '/nodes/$slug': typeof NodesSlugRoute
+  '/prototype/admin-studio': typeof PrototypeAdminStudioRoute
+  '/sites/$slug': typeof SitesSlugRoute
   '/tags/$tag': typeof TagsTagRoute
   '/articles/': typeof ArticlesIndexRoute
+  '/events/': typeof EventsIndexRoute
+  '/graph/': typeof GraphIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -75,8 +110,13 @@ export interface FileRoutesByTo {
   '/search': typeof SearchRoute
   '/articles/$slug': typeof ArticlesSlugRoute
   '/categories/$category': typeof CategoriesCategoryRoute
+  '/nodes/$slug': typeof NodesSlugRoute
+  '/prototype/admin-studio': typeof PrototypeAdminStudioRoute
+  '/sites/$slug': typeof SitesSlugRoute
   '/tags/$tag': typeof TagsTagRoute
   '/articles': typeof ArticlesIndexRoute
+  '/events': typeof EventsIndexRoute
+  '/graph': typeof GraphIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -86,8 +126,13 @@ export interface FileRoutesById {
   '/search': typeof SearchRoute
   '/articles/$slug': typeof ArticlesSlugRoute
   '/categories/$category': typeof CategoriesCategoryRoute
+  '/nodes/$slug': typeof NodesSlugRoute
+  '/prototype/admin-studio': typeof PrototypeAdminStudioRoute
+  '/sites/$slug': typeof SitesSlugRoute
   '/tags/$tag': typeof TagsTagRoute
   '/articles/': typeof ArticlesIndexRoute
+  '/events/': typeof EventsIndexRoute
+  '/graph/': typeof GraphIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -98,8 +143,13 @@ export interface FileRouteTypes {
     | '/search'
     | '/articles/$slug'
     | '/categories/$category'
+    | '/nodes/$slug'
+    | '/prototype/admin-studio'
+    | '/sites/$slug'
     | '/tags/$tag'
     | '/articles/'
+    | '/events/'
+    | '/graph/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -107,8 +157,13 @@ export interface FileRouteTypes {
     | '/search'
     | '/articles/$slug'
     | '/categories/$category'
+    | '/nodes/$slug'
+    | '/prototype/admin-studio'
+    | '/sites/$slug'
     | '/tags/$tag'
     | '/articles'
+    | '/events'
+    | '/graph'
   id:
     | '__root__'
     | '/'
@@ -117,8 +172,13 @@ export interface FileRouteTypes {
     | '/search'
     | '/articles/$slug'
     | '/categories/$category'
+    | '/nodes/$slug'
+    | '/prototype/admin-studio'
+    | '/sites/$slug'
     | '/tags/$tag'
     | '/articles/'
+    | '/events/'
+    | '/graph/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -126,7 +186,12 @@ export interface RootRouteChildren {
   ArticlesRouteRoute: typeof ArticlesRouteRouteWithChildren
   CategoriesRouteRoute: typeof CategoriesRouteRouteWithChildren
   SearchRoute: typeof SearchRoute
+  NodesSlugRoute: typeof NodesSlugRoute
+  PrototypeAdminStudioRoute: typeof PrototypeAdminStudioRoute
+  SitesSlugRoute: typeof SitesSlugRoute
   TagsTagRoute: typeof TagsTagRoute
+  EventsIndexRoute: typeof EventsIndexRoute
+  GraphIndexRoute: typeof GraphIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -180,6 +245,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CategoriesCategoryRouteImport
       parentRoute: typeof CategoriesRouteRoute
     }
+    '/events/': {
+      id: '/events/'
+      path: '/events'
+      fullPath: '/events/'
+      preLoaderRoute: typeof EventsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/graph/': {
+      id: '/graph/'
+      path: '/graph'
+      fullPath: '/graph/'
+      preLoaderRoute: typeof GraphIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/nodes/$slug': {
+      id: '/nodes/$slug'
+      path: '/nodes/$slug'
+      fullPath: '/nodes/$slug'
+      preLoaderRoute: typeof NodesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/prototype/admin-studio': {
+      id: '/prototype/admin-studio'
+      path: '/prototype/admin-studio'
+      fullPath: '/prototype/admin-studio'
+      preLoaderRoute: typeof PrototypeAdminStudioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sites/$slug': {
+      id: '/sites/$slug'
+      path: '/sites/$slug'
+      fullPath: '/sites/$slug'
+      preLoaderRoute: typeof SitesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tags/$tag': {
       id: '/tags/$tag'
       path: '/tags/$tag'
@@ -221,7 +321,12 @@ const rootRouteChildren: RootRouteChildren = {
   ArticlesRouteRoute: ArticlesRouteRouteWithChildren,
   CategoriesRouteRoute: CategoriesRouteRouteWithChildren,
   SearchRoute: SearchRoute,
+  NodesSlugRoute: NodesSlugRoute,
+  PrototypeAdminStudioRoute: PrototypeAdminStudioRoute,
+  SitesSlugRoute: SitesSlugRoute,
   TagsTagRoute: TagsTagRoute,
+  EventsIndexRoute: EventsIndexRoute,
+  GraphIndexRoute: GraphIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
