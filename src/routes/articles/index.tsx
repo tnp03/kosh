@@ -1,17 +1,24 @@
 import { createFileRoute, Link } from "@tanstack/react-router"
-import { allArticles, allNodes } from "content-collections"
 import { useState } from "react"
+import { listArticles, listNodes } from "~/lib/content"
 import { LayerChips } from "~/components/LayerChips"
 import { ArrowLeft, ArrowUpRight, FileText } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export const Route = createFileRoute("/articles/")({
   component: ArticlesPage,
+  loader: async () => {
+    const [articles, nodes] = await Promise.all([
+      listArticles({ data: { status: "published" } }),
+      listNodes(),
+    ])
+    return { articles, nodes }
+  },
 })
 
 function ArticlesPage() {
-  const layerNodes = allNodes.filter((n) => n.type === "layer")
-  const articles = allArticles.sort((a, b) => (b.date ?? "").localeCompare(a.date ?? ""))
+  const { articles, nodes } = Route.useLoaderData()
+  const layerNodes = nodes.filter((n) => n.type === "layer")
   const [selectedLayer, setSelectedLayer] = useState<string | null>(null)
 
   const filtered = selectedLayer
@@ -20,9 +27,9 @@ function ArticlesPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-8">
-      <Link to="/">
+      <Link to="/dashboard">
         <Button variant="ghost" className="mb-6 gap-2">
-          <ArrowLeft className="h-4 w-4" />
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
           Back to Dashboard
         </Button>
       </Link>
@@ -41,19 +48,19 @@ function ArticlesPage() {
           {selectedLayer && (
             <button
               onClick={() => setSelectedLayer(null)}
-              className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+              className="text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
             >
               Clear filter
             </button>
           )}
         </div>
-        <LayerChips selected={selectedLayer} onSelect={setSelectedLayer} />
+        <LayerChips nodes={nodes} selected={selectedLayer} onSelect={setSelectedLayer} />
       </div>
 
       {/* Articles list */}
       <div className="bg-card rounded-xl border">
         <div className="p-4 border-b flex items-center gap-2 text-sm text-muted-foreground">
-          <FileText className="h-4 w-4" />
+          <FileText className="h-4 w-4" aria-hidden="true" />
           <span>{filtered.length} article{filtered.length !== 1 ? "s" : ""}</span>
           {selectedLayer && (
             <span className="px-2 py-0.5 rounded-full bg-secondary text-xs">
@@ -78,7 +85,7 @@ function ArticlesPage() {
                     const layer = layerNodes.find((n) => n.slug === l)
                     return layer ? (
                       <span key={l} className="flex items-center gap-1 text-xs text-muted-foreground">
-                        <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: layer.color }} />
+                        <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: layer.color }} aria-hidden="true" />
                         {layer.title}
                       </span>
                     ) : null
@@ -86,7 +93,7 @@ function ArticlesPage() {
                   {article.date && <span className="text-xs text-muted-foreground">· {article.date}</span>}
                 </div>
               </div>
-              <ArrowUpRight className="h-4 w-4 text-muted-foreground shrink-0" />
+              <ArrowUpRight className="h-4 w-4 text-muted-foreground shrink-0" aria-hidden="true" />
             </Link>
           ))}
           {filtered.length === 0 && (

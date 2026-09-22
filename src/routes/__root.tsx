@@ -7,7 +7,6 @@ import {
   createRootRoute,
 } from "@tanstack/react-router"
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools"
-import { TanStackDevtools } from "@tanstack/react-devtools"
 import * as React from "react"
 import { DefaultCatchBoundary } from "~/components/DefaultCatchBoundary"
 import { NotFound } from "~/components/NotFound"
@@ -15,7 +14,7 @@ import { TooltipProvider } from "@/components/ui/tooltip"
 import appCss from "~/styles/globals.css?url"
 import { seo } from "~/utils/seo"
 import { Button } from "@/components/ui/button"
-import { Search } from "lucide-react"
+import { Brain, Search } from "lucide-react"
 
 export const Route = createRootRoute({
   head: () => ({
@@ -35,6 +34,12 @@ export const Route = createRootRoute({
     ],
     links: [
       { rel: "stylesheet", href: appCss },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap",
+      },
       {
         rel: "apple-touch-icon",
         sizes: "180x180",
@@ -73,12 +78,12 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="container mx-auto flex h-14 items-center px-4">
               <Link to="/" className="mr-6 flex items-center space-x-2">
-                <span className="text-lg">🧠</span>
+                <Brain className="h-5 w-5 text-primary" aria-hidden="true" />
                 <span className="font-bold text-xl">Kosh</span>
               </Link>
               <nav className="flex items-center gap-1 text-sm">
                 <Link
-                  to="/"
+                  to="/dashboard"
                   className="px-3 py-1.5 rounded-full transition-colors hover:bg-accent text-foreground/60"
                   activeProps={{ className: "bg-foreground text-background font-medium" }}
                 >
@@ -119,14 +124,24 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             <Outlet />
           </main>
           <footer className="border-t py-6">
-            <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-              Kosh - AI Knowledge Base
+            <div className="container mx-auto px-4 flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-2 text-sm text-muted-foreground">
+              <span>Kosh - AI Knowledge Base</span>
+              <nav className="flex items-center gap-4">
+                <Link to="/graph" className="hover:text-foreground transition-colors">
+                  Graph
+                </Link>
+                <Link to="/events" className="hover:text-foreground transition-colors">
+                  Events
+                </Link>
+                <Link to="/studio" className="hover:text-foreground transition-colors">
+                  Studio
+                </Link>
+              </nav>
             </div>
           </footer>
         </div>
         </TooltipProvider>
         <TanStackRouterDevtools position="bottom-right" />
-        <TanStackDevtools position="bottom-right" />
         <Scripts />
       </body>
     </html>

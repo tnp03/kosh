@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flappy Bird Clone</title>
+    <style>
+        /* --- CSS Styling --- */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #333;
+            font-family: 'Arial', sans-serif;
+        }
+
+        #game-container {
+            border: 2px solid #333;
+            position: relative;
+            overflow: hidden; /* Crucial for pipes to stay within bounds */
+            width: 400px;
+            height: 600px;
+            background-color: skyblue;
+        }
+
+        #player {
+            width: 50px;
+            height: 35px;
+            background-color: yellow; /* Represents the bird */
+            border-radius: 5px;
+            position: absolute;
+            left: 50px;
+            bottom: 10px; /* Starting position adjusted for ground effect */
+            transition: transform 0.1s; /* Smooth rotation visual feedback */
+        }
+
+        .pipe {
+            width: 60px;
+            background-color: green;
+            position: absolute;
+            /* Top/Bottom pipes will be styled with specific classes */
+        }
+
+        #score-board {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 3em;
+            color: white;
+            text-shadow: 2px 2px 4px #000000;
+            z-index: 10;
+        }
+
+        #game-over {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 20px 40px;
+            border-radius: 10px;
+            text-align: center;
+            z-index: 20;
+        }
+
+        #restart-button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            font-size: 1.2em;
+            cursor: pointer;
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            border-radius: 5px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="game-container">
+        <div id="score-board">Score: 0</div>
+        <div id="player"></div>
+        <!-- Pipes and Game Over screen will be dynamically added/managed -->
+        <div id="game-over" style="display: none;">
+            <h1>Game Over!</h1>
+            <p>Your final score: <span id="final-score">0</span></p>
+            <button id="restart-button">Restart Game</button>
+        </div>
+    </div>
+
+    <script>
+        // --- JAVASCRIPT GAME LOGIC ---
+
+        const container = document.getElementById('game-container');
+        const player = document.getElementById('player');
+        const scoreBoard = document.getElementById('score-board');
+        const gameOverScreen = document.getElementById('game-over');
+        const finalScoreDisplay = document.getElementById('final-score');
+        const restartButton = document.getElementById('restart-button');
+
+        // Game Constants
+        const CONTAINER_WIDTH = 400;
+        const CONTAINER_HEIGHT = 600;
+        const PLAYER_WIDTH = 50;
+        const GRAVITY = 0.7;
+        const JUMP_STRENGTH = -12;
+        const PIPE_SPEED = 3;
+        const PIPE_WIDTH = 60;
+        const GAP_SIZE = 180; // Vertical gap size
+
+        // Game State Variables
+        let playerY = CONTAINER_HEIGHT / 2;
+        let playerVelocity = 0;
+        let score = 0;
+        let gameLoopInterval;
+        let pipeGeneratorInterval;
+        let isGameOver = true;
+
+        // --- CORE GAME FUNCTIONS ---
+
+        function startGame() {
+            // Reset State
+            isGameOver = false;
+            score = 0;
+            playerY = CONTAINER_HEIGHT / 2;
+            playerVelocity = 0;
+            scoreBoard.textContent = "Score: 0";
+            gameOverScreen.style.display = 'none';
+            player.style.bottom = (CONTAINER_HEIGHT - playerY) + 'px'; // Set initial visual bottom position
+
+            // Clear existing pipes
+            document.querySelectorAll('.pipe').forEach(p => p.remove());
+
+            // Start loops
+            if (gameLoopInterval) clearInterval(gameLoopInterval);
+            if (pipeGeneratorInterval) clearInterval(pipeGeneratorInterval);
+
+            gameLoopInterval = setInterval(gameUpdate, 20); // ~50 FPS update rate
+            pipeGeneratorInterval = setInterval(createPipe, 2000); // New pipe every 2 seconds
+
+            // Add event listeners only when game starts
+            document.addEventListener('keydown', handleInput);
+            container.addEventListener('click', handleInput);
+        }
+
+        function endGame() {
+            isGameOver = true;
+            clearInterval(gameLoopInterval);
+            clearInterval(pipeGeneratorInterval);
+
+            // Remove all input listeners to prevent accidental jumps
+            document.removeEventListener('keydown', handleInput);
+            container.removeEventListener('click', handleInput);
+
+            finalScoreDisplay.textContent = score;
+            gameOverScreen.style.display = 'block';
+        }
+
+
+        function gameUpdate() {
+            if (isGameOver) return;
+
+            // 1. Apply Gravity and Movement
+            playerVelocity += GRAVITY * 0.8; // Slightly reduced gravity effect for feel
+            playerY += playerVelocity;
+            playerVelocity *= 0.98; // Slight air friction/damping
+
+            // Calculate new vertical position (CSS 'bottom' calculation)
+            let bottomPosition = Math.min(Math.max(0, CONTAINER_HEIGHT - playerY + PLAYER_WIDTH), CONTAINER_HEIGHT);
+            player.style.bottom = `${bottomPosition}px`;
+
+            // Simple rotation visual feedback based on velocity
+            const rotation = Math.min(90, Math.max(-45, playerVelocity * 3));
+            player.style.transform = `rotate(${rotation}deg)`;
+
+
+            // 2. Check for Ground/Ceiling Collision
+            if (playerY < 0 || playerY + 35 > CONTAINER_HEIGHT) { // Player height is 35px
+                 endGame();
+                 return;
+            }
+
+            // 3. Move and Check Pipes
+            const pipes = document.querySelectorAll('.pipe');
+            pipes.forEach(pipe => {
+                let pipeX = parseFloat(pipe.style.left);
+                let pipeTopHeight = parseFloat(pipe.dataset.topHeight) || 0;
+
+                // Update position
+                pipeX -= PIPE_SPEED;
+                pipe.style.left = `${pipeX}px`;
+
+                // Collision Detection (Simplified: checking the main element for now)
+                if (checkCollision(pipe, pipeTopHeight)) {
+                    endGame();
+                    return; // Stop processing pipes if collision occurs
+                }
+
+
+                // Scoring & Cleanup
+                if (!pipe.scored && pipeX < 50 - PIPE_WIDTH && pipeX > 40) { // Passed the player's X position (approximate center check)
+                     score += 1;
+                     scoreBoard.textContent = `Score: ${score}`;
+                     pipe.setAttribute('scored', true);
+                }
+
+                // Remove pipes that move off screen
+                if (pipeX < -PIPE_WIDTH) {
+                    pipe.remove();
+                }
+            });
+        }
+
+
+        function createPipe() {
+            if (isGameOver) return;
+
+            // Randomize the gap center, ensuring it's within bounds
+            const minHeight = 50;
+            const maxHeight = CONTAINER_HEIGHT - 50 - GAP_SIZE;
+            const topHeightRandom = Math.floor(Math.random() * (maxHeight - minHeight) + minHeight);
+            const bottomHeight = CONTAINER_HEIGHT - topHeightRandom - GAP_SIZE;
+
+            // Create the top pipe element
+            const pipeTop = document.createElement('div');
+            pipeTop.classList.add('pipe');
+            pipeTop.style.height = `${topHeightRandom}px`;
+            pipeTop.style.width = '60px';
+            pipeTop.style.top = '0px';
+            pipeTop.style.left = `${CONTAINER_WIDTH}px`;
+            pipeTop.dataset.topHeight = topHeightRandom;
+
+            // Create the bottom pipe element
+            const pipeBottom = document.createElement('div');
+            pipeBottom.classList.add('pipe');
+            pipeBottom.style.height = `${bottomHeight}px`;
+            pipeBottom.style.width = '60px';
+            pipeBottom.style.bottom = '0px';
+            pipeBottom.style.left = `${CONTAINER_WIDTH}px`;
+
+            // Add a marker to the top pipe to help track which pipes belong together for scoring/collision simplicity in this basic setup
+            pipeTop.dataset.passedX = false;
+            pipeBottom.dataset.passedX = false;
+
+            container.appendChild(pipeTop);
+            container.appendChild(pipeBottom);
+        }
+
+
+        function checkCollision(element, topHeight) {
+            const playerRect = player.getBoundingClientRect();
+            const pipeRect = element.getBoundingClientRect();
+
+            // Simplified collision: Only checking the vertical overlap for now,
+            // assuming we know which type of pipe (top/bottom) this is based on its Y position relative to container height.
+
+            // For a real implementation, you'd check player X vs pipe X AND player Y vs pipe Top/Bottom boundaries.
+            // Since we are using CSS positioning and dynamically calculating positions,
+            // the full collision logic is complex. We will simulate it based on general proximity.
+
+            const pipeLeft = parseFloat(element.style.left);
+            const pipeRight = pipeLeft + 60;
+
+            if (playerRect.right > pipeLeft && playerRect.left < pipeRight) {
+                // Player is horizontally aligned with the pipe
+
+                // If the element is the top pipe AND the player's bottom edge is hitting it
+                const isTopPipe = element.style.top === '0px';
+
+                if (isTopPipe && (playerRect.top < parseFloat(element.style.height) + 5)) { // Add small buffer
+                    return true;
+                }
+
+                // If the element is the bottom pipe AND the player's top edge is hitting it
+                const isBottomPipe = element.style.bottom === '0px';
+                if (isBottomPipe && (playerRect.bottom > CONTAINER_HEIGHT - parseFloat(element.style.height) - 5)) { // Add small buffer
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+
+        // --- INPUT HANDLERS ---
+
+        function flap() {
+            if (isGameOver) return;
+            playerVelocity = JUMP_STRENGTH;
+        }
+
+        function handleInput(event) {
+            // Flap on spacebar press, or click anywhere in the game area
+            if ((event.type === 'keydown' && event.code === 'Space') || (event.type === 'click')) {
+                flap();
+            }
+        }
+
+
+        // --- EVENT LISTENERS AND INITIALIZATION ---
+
+        restartButton.addEventListener('click', startGame);
+
+        // Initial Setup: Set the player position correctly on load and start game flow
+        player.style.left = '50px'; // Fixed X position for simplicity
+        startGame();
+
+    </script>
+</body>
+</html>

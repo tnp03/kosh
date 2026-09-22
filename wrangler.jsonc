@@ -1,0 +1,16 @@
+{
+  // Cloudflare Workers deploy config.
+  // Before deploying: create a real D1 database and replace database_id:
+  //   npx wrangler d1 create kosh-db
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "kosh",
+  "main": ".output/server/index.mjs",
+  "compatibility_date": "2026-08-01",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "kosh-db",
+      "database_id": "local-kosh-db"
+    }
+  ]
+}

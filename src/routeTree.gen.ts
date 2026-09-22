@@ -10,22 +10,35 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as ArticlesRouteRouteImport } from './routes/articles/route'
-import { Route as CategoriesRouteRouteImport } from './routes/categories/route'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as SearchRouteImport } from './routes/search'
+import { Route as StudioRouteRouteImport } from './routes/studio/route'
 import { Route as ArticlesIndexRouteImport } from './routes/articles/index'
 import { Route as ArticlesSlugRouteImport } from './routes/articles/$slug'
-import { Route as CategoriesCategoryRouteImport } from './routes/categories/$category'
 import { Route as EventsIndexRouteImport } from './routes/events/index'
 import { Route as GraphIndexRouteImport } from './routes/graph/index'
 import { Route as NodesSlugRouteImport } from './routes/nodes/$slug'
-import { Route as PrototypeAdminStudioRouteImport } from './routes/prototype/admin-studio'
 import { Route as SitesSlugRouteImport } from './routes/sites/$slug'
+import { Route as StudioIndexRouteImport } from './routes/studio/index'
+import { Route as StudioEventsRouteImport } from './routes/studio/events'
 import { Route as TagsTagRouteImport } from './routes/tags/$tag'
+import { Route as StudioArticlesIndexRouteImport } from './routes/studio/articles/index'
+import { Route as StudioArticlesSlugRouteImport } from './routes/studio/articles/$slug'
+import { Route as StudioNodesIndexRouteImport } from './routes/studio/nodes/index'
+import { Route as StudioNodesSlugRouteImport } from './routes/studio/nodes/$slug'
+import { Route as StudioSitesIndexRouteImport } from './routes/studio/sites/index'
+import { Route as StudioSitesSlugRouteImport } from './routes/studio/sites/$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ArticlesRouteRoute = ArticlesRouteRouteImport.update({
@@ -33,14 +46,19 @@ const ArticlesRouteRoute = ArticlesRouteRouteImport.update({
   path: '/articles',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CategoriesRouteRoute = CategoriesRouteRouteImport.update({
-  id: '/categories',
-  path: '/categories',
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StudioRouteRoute = StudioRouteRouteImport.update({
+  id: '/studio',
+  path: '/studio',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ArticlesIndexRoute = ArticlesIndexRouteImport.update({
@@ -52,11 +70,6 @@ const ArticlesSlugRoute = ArticlesSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
   getParentRoute: () => ArticlesRouteRoute,
-} as any)
-const CategoriesCategoryRoute = CategoriesCategoryRouteImport.update({
-  id: '/$category',
-  path: '/$category',
-  getParentRoute: () => CategoriesRouteRoute,
 } as any)
 const EventsIndexRoute = EventsIndexRouteImport.update({
   id: '/events/',
@@ -73,121 +86,203 @@ const NodesSlugRoute = NodesSlugRouteImport.update({
   path: '/nodes/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PrototypeAdminStudioRoute = PrototypeAdminStudioRouteImport.update({
-  id: '/prototype/admin-studio',
-  path: '/prototype/admin-studio',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SitesSlugRoute = SitesSlugRouteImport.update({
   id: '/sites/$slug',
   path: '/sites/$slug',
   getParentRoute: () => rootRouteImport,
+} as any)
+const StudioIndexRoute = StudioIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => StudioRouteRoute,
+} as any)
+const StudioEventsRoute = StudioEventsRouteImport.update({
+  id: '/events',
+  path: '/events',
+  getParentRoute: () => StudioRouteRoute,
 } as any)
 const TagsTagRoute = TagsTagRouteImport.update({
   id: '/tags/$tag',
   path: '/tags/$tag',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StudioArticlesIndexRoute = StudioArticlesIndexRouteImport.update({
+  id: '/articles/',
+  path: '/articles/',
+  getParentRoute: () => StudioRouteRoute,
+} as any)
+const StudioArticlesSlugRoute = StudioArticlesSlugRouteImport.update({
+  id: '/articles/$slug',
+  path: '/articles/$slug',
+  getParentRoute: () => StudioRouteRoute,
+} as any)
+const StudioNodesIndexRoute = StudioNodesIndexRouteImport.update({
+  id: '/nodes/',
+  path: '/nodes/',
+  getParentRoute: () => StudioRouteRoute,
+} as any)
+const StudioNodesSlugRoute = StudioNodesSlugRouteImport.update({
+  id: '/nodes/$slug',
+  path: '/nodes/$slug',
+  getParentRoute: () => StudioRouteRoute,
+} as any)
+const StudioSitesIndexRoute = StudioSitesIndexRouteImport.update({
+  id: '/sites/',
+  path: '/sites/',
+  getParentRoute: () => StudioRouteRoute,
+} as any)
+const StudioSitesSlugRoute = StudioSitesSlugRouteImport.update({
+  id: '/sites/$slug',
+  path: '/sites/$slug',
+  getParentRoute: () => StudioRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/articles': typeof ArticlesRouteRouteWithChildren
-  '/categories': typeof CategoriesRouteRouteWithChildren
+  '/studio': typeof StudioRouteRouteWithChildren
+  '/admin': typeof AdminRoute
+  '/dashboard': typeof DashboardRoute
   '/search': typeof SearchRoute
   '/articles/$slug': typeof ArticlesSlugRoute
-  '/categories/$category': typeof CategoriesCategoryRoute
   '/nodes/$slug': typeof NodesSlugRoute
-  '/prototype/admin-studio': typeof PrototypeAdminStudioRoute
   '/sites/$slug': typeof SitesSlugRoute
+  '/studio/events': typeof StudioEventsRoute
   '/tags/$tag': typeof TagsTagRoute
   '/articles/': typeof ArticlesIndexRoute
   '/events/': typeof EventsIndexRoute
   '/graph/': typeof GraphIndexRoute
+  '/studio/': typeof StudioIndexRoute
+  '/studio/articles/$slug': typeof StudioArticlesSlugRoute
+  '/studio/nodes/$slug': typeof StudioNodesSlugRoute
+  '/studio/sites/$slug': typeof StudioSitesSlugRoute
+  '/studio/articles/': typeof StudioArticlesIndexRoute
+  '/studio/nodes/': typeof StudioNodesIndexRoute
+  '/studio/sites/': typeof StudioSitesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/categories': typeof CategoriesRouteRouteWithChildren
+  '/admin': typeof AdminRoute
+  '/dashboard': typeof DashboardRoute
   '/search': typeof SearchRoute
   '/articles/$slug': typeof ArticlesSlugRoute
-  '/categories/$category': typeof CategoriesCategoryRoute
   '/nodes/$slug': typeof NodesSlugRoute
-  '/prototype/admin-studio': typeof PrototypeAdminStudioRoute
   '/sites/$slug': typeof SitesSlugRoute
+  '/studio/events': typeof StudioEventsRoute
   '/tags/$tag': typeof TagsTagRoute
   '/articles': typeof ArticlesIndexRoute
   '/events': typeof EventsIndexRoute
   '/graph': typeof GraphIndexRoute
+  '/studio': typeof StudioIndexRoute
+  '/studio/articles/$slug': typeof StudioArticlesSlugRoute
+  '/studio/nodes/$slug': typeof StudioNodesSlugRoute
+  '/studio/sites/$slug': typeof StudioSitesSlugRoute
+  '/studio/articles': typeof StudioArticlesIndexRoute
+  '/studio/nodes': typeof StudioNodesIndexRoute
+  '/studio/sites': typeof StudioSitesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/articles': typeof ArticlesRouteRouteWithChildren
-  '/categories': typeof CategoriesRouteRouteWithChildren
+  '/studio': typeof StudioRouteRouteWithChildren
+  '/admin': typeof AdminRoute
+  '/dashboard': typeof DashboardRoute
   '/search': typeof SearchRoute
   '/articles/$slug': typeof ArticlesSlugRoute
-  '/categories/$category': typeof CategoriesCategoryRoute
   '/nodes/$slug': typeof NodesSlugRoute
-  '/prototype/admin-studio': typeof PrototypeAdminStudioRoute
   '/sites/$slug': typeof SitesSlugRoute
+  '/studio/events': typeof StudioEventsRoute
   '/tags/$tag': typeof TagsTagRoute
   '/articles/': typeof ArticlesIndexRoute
   '/events/': typeof EventsIndexRoute
   '/graph/': typeof GraphIndexRoute
+  '/studio/': typeof StudioIndexRoute
+  '/studio/articles/$slug': typeof StudioArticlesSlugRoute
+  '/studio/nodes/$slug': typeof StudioNodesSlugRoute
+  '/studio/sites/$slug': typeof StudioSitesSlugRoute
+  '/studio/articles/': typeof StudioArticlesIndexRoute
+  '/studio/nodes/': typeof StudioNodesIndexRoute
+  '/studio/sites/': typeof StudioSitesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/articles'
-    | '/categories'
+    | '/studio'
+    | '/admin'
+    | '/dashboard'
     | '/search'
     | '/articles/$slug'
-    | '/categories/$category'
     | '/nodes/$slug'
-    | '/prototype/admin-studio'
     | '/sites/$slug'
+    | '/studio/events'
     | '/tags/$tag'
     | '/articles/'
     | '/events/'
     | '/graph/'
+    | '/studio/'
+    | '/studio/articles/$slug'
+    | '/studio/nodes/$slug'
+    | '/studio/sites/$slug'
+    | '/studio/articles/'
+    | '/studio/nodes/'
+    | '/studio/sites/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/categories'
+    | '/admin'
+    | '/dashboard'
     | '/search'
     | '/articles/$slug'
-    | '/categories/$category'
     | '/nodes/$slug'
-    | '/prototype/admin-studio'
     | '/sites/$slug'
+    | '/studio/events'
     | '/tags/$tag'
     | '/articles'
     | '/events'
     | '/graph'
+    | '/studio'
+    | '/studio/articles/$slug'
+    | '/studio/nodes/$slug'
+    | '/studio/sites/$slug'
+    | '/studio/articles'
+    | '/studio/nodes'
+    | '/studio/sites'
   id:
     | '__root__'
     | '/'
     | '/articles'
-    | '/categories'
+    | '/studio'
+    | '/admin'
+    | '/dashboard'
     | '/search'
     | '/articles/$slug'
-    | '/categories/$category'
     | '/nodes/$slug'
-    | '/prototype/admin-studio'
     | '/sites/$slug'
+    | '/studio/events'
     | '/tags/$tag'
     | '/articles/'
     | '/events/'
     | '/graph/'
+    | '/studio/'
+    | '/studio/articles/$slug'
+    | '/studio/nodes/$slug'
+    | '/studio/sites/$slug'
+    | '/studio/articles/'
+    | '/studio/nodes/'
+    | '/studio/sites/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ArticlesRouteRoute: typeof ArticlesRouteRouteWithChildren
-  CategoriesRouteRoute: typeof CategoriesRouteRouteWithChildren
+  StudioRouteRoute: typeof StudioRouteRouteWithChildren
+  AdminRoute: typeof AdminRoute
+  DashboardRoute: typeof DashboardRoute
   SearchRoute: typeof SearchRoute
   NodesSlugRoute: typeof NodesSlugRoute
-  PrototypeAdminStudioRoute: typeof PrototypeAdminStudioRoute
   SitesSlugRoute: typeof SitesSlugRoute
   TagsTagRoute: typeof TagsTagRoute
   EventsIndexRoute: typeof EventsIndexRoute
@@ -203,6 +298,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/articles': {
       id: '/articles'
       path: '/articles'
@@ -210,11 +312,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ArticlesRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/categories': {
-      id: '/categories'
-      path: '/categories'
-      fullPath: '/categories'
-      preLoaderRoute: typeof CategoriesRouteRouteImport
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/search': {
@@ -222,6 +324,13 @@ declare module '@tanstack/react-router' {
       path: '/search'
       fullPath: '/search'
       preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/studio': {
+      id: '/studio'
+      path: '/studio'
+      fullPath: '/studio'
+      preLoaderRoute: typeof StudioRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/articles/': {
@@ -237,13 +346,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/articles/$slug'
       preLoaderRoute: typeof ArticlesSlugRouteImport
       parentRoute: typeof ArticlesRouteRoute
-    }
-    '/categories/$category': {
-      id: '/categories/$category'
-      path: '/$category'
-      fullPath: '/categories/$category'
-      preLoaderRoute: typeof CategoriesCategoryRouteImport
-      parentRoute: typeof CategoriesRouteRoute
     }
     '/events/': {
       id: '/events/'
@@ -266,13 +368,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NodesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/prototype/admin-studio': {
-      id: '/prototype/admin-studio'
-      path: '/prototype/admin-studio'
-      fullPath: '/prototype/admin-studio'
-      preLoaderRoute: typeof PrototypeAdminStudioRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/sites/$slug': {
       id: '/sites/$slug'
       path: '/sites/$slug'
@@ -280,12 +375,68 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SitesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/studio/': {
+      id: '/studio/'
+      path: '/'
+      fullPath: '/studio/'
+      preLoaderRoute: typeof StudioIndexRouteImport
+      parentRoute: typeof StudioRouteRoute
+    }
+    '/studio/events': {
+      id: '/studio/events'
+      path: '/events'
+      fullPath: '/studio/events'
+      preLoaderRoute: typeof StudioEventsRouteImport
+      parentRoute: typeof StudioRouteRoute
+    }
     '/tags/$tag': {
       id: '/tags/$tag'
       path: '/tags/$tag'
       fullPath: '/tags/$tag'
       preLoaderRoute: typeof TagsTagRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/studio/articles/': {
+      id: '/studio/articles/'
+      path: '/articles'
+      fullPath: '/studio/articles/'
+      preLoaderRoute: typeof StudioArticlesIndexRouteImport
+      parentRoute: typeof StudioRouteRoute
+    }
+    '/studio/articles/$slug': {
+      id: '/studio/articles/$slug'
+      path: '/articles/$slug'
+      fullPath: '/studio/articles/$slug'
+      preLoaderRoute: typeof StudioArticlesSlugRouteImport
+      parentRoute: typeof StudioRouteRoute
+    }
+    '/studio/nodes/': {
+      id: '/studio/nodes/'
+      path: '/nodes'
+      fullPath: '/studio/nodes/'
+      preLoaderRoute: typeof StudioNodesIndexRouteImport
+      parentRoute: typeof StudioRouteRoute
+    }
+    '/studio/nodes/$slug': {
+      id: '/studio/nodes/$slug'
+      path: '/nodes/$slug'
+      fullPath: '/studio/nodes/$slug'
+      preLoaderRoute: typeof StudioNodesSlugRouteImport
+      parentRoute: typeof StudioRouteRoute
+    }
+    '/studio/sites/': {
+      id: '/studio/sites/'
+      path: '/sites'
+      fullPath: '/studio/sites/'
+      preLoaderRoute: typeof StudioSitesIndexRouteImport
+      parentRoute: typeof StudioRouteRoute
+    }
+    '/studio/sites/$slug': {
+      id: '/studio/sites/$slug'
+      path: '/sites/$slug'
+      fullPath: '/studio/sites/$slug'
+      preLoaderRoute: typeof StudioSitesSlugRouteImport
+      parentRoute: typeof StudioRouteRoute
     }
   }
 }
@@ -304,25 +455,40 @@ const ArticlesRouteRouteWithChildren = ArticlesRouteRoute._addFileChildren(
   ArticlesRouteRouteChildren,
 )
 
-interface CategoriesRouteRouteChildren {
-  CategoriesCategoryRoute: typeof CategoriesCategoryRoute
+interface StudioRouteRouteChildren {
+  StudioEventsRoute: typeof StudioEventsRoute
+  StudioIndexRoute: typeof StudioIndexRoute
+  StudioArticlesSlugRoute: typeof StudioArticlesSlugRoute
+  StudioNodesSlugRoute: typeof StudioNodesSlugRoute
+  StudioSitesSlugRoute: typeof StudioSitesSlugRoute
+  StudioArticlesIndexRoute: typeof StudioArticlesIndexRoute
+  StudioNodesIndexRoute: typeof StudioNodesIndexRoute
+  StudioSitesIndexRoute: typeof StudioSitesIndexRoute
 }
 
-const CategoriesRouteRouteChildren: CategoriesRouteRouteChildren = {
-  CategoriesCategoryRoute: CategoriesCategoryRoute,
+const StudioRouteRouteChildren: StudioRouteRouteChildren = {
+  StudioEventsRoute: StudioEventsRoute,
+  StudioIndexRoute: StudioIndexRoute,
+  StudioArticlesSlugRoute: StudioArticlesSlugRoute,
+  StudioNodesSlugRoute: StudioNodesSlugRoute,
+  StudioSitesSlugRoute: StudioSitesSlugRoute,
+  StudioArticlesIndexRoute: StudioArticlesIndexRoute,
+  StudioNodesIndexRoute: StudioNodesIndexRoute,
+  StudioSitesIndexRoute: StudioSitesIndexRoute,
 }
 
-const CategoriesRouteRouteWithChildren = CategoriesRouteRoute._addFileChildren(
-  CategoriesRouteRouteChildren,
+const StudioRouteRouteWithChildren = StudioRouteRoute._addFileChildren(
+  StudioRouteRouteChildren,
 )
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ArticlesRouteRoute: ArticlesRouteRouteWithChildren,
-  CategoriesRouteRoute: CategoriesRouteRouteWithChildren,
+  StudioRouteRoute: StudioRouteRouteWithChildren,
+  AdminRoute: AdminRoute,
+  DashboardRoute: DashboardRoute,
   SearchRoute: SearchRoute,
   NodesSlugRoute: NodesSlugRoute,
-  PrototypeAdminStudioRoute: PrototypeAdminStudioRoute,
   SitesSlugRoute: SitesSlugRoute,
   TagsTagRoute: TagsTagRoute,
   EventsIndexRoute: EventsIndexRoute,

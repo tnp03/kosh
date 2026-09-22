@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router"
-import { allNodes } from "content-collections"
+import { listNodes } from "~/lib/content"
 import { useState } from "react"
 
 const nodePositions: Record<string, { x: number; y: number }> = {
@@ -26,7 +26,7 @@ const NODE_H = 34
 const DIM_W = 110
 const DIM_H = 30
 
-function getEdgeLines(nodes: typeof allNodes) {
+function getEdgeLines(nodes: Array<{ slug: string; edges: string[] }>) {
   const lines: Array<{
     x1: number
     y1: number
@@ -54,9 +54,13 @@ function getEdgeLines(nodes: typeof allNodes) {
 
 export const Route = createFileRoute("/graph/")({
   component: GraphPage,
+  loader: async () => {
+    return { nodes: await listNodes() }
+  },
 })
 
 function GraphPage() {
+  const { nodes: allNodes } = Route.useLoaderData()
   const [hovered, setHovered] = useState<string | null>(null)
   const [selected, setSelected] = useState<string | null>(null)
 
@@ -120,7 +124,7 @@ function GraphPage() {
                   width={NODE_W}
                   height={NODE_H}
                   rx={8}
-                  fill={active ? node.color : "#ffffff"}
+                  fill={active ? node.color : "var(--card)"}
                   stroke={node.color}
                   strokeWidth={active ? 2.5 : 1.5}
                   style={{ transition: "all 150ms ease" }}
@@ -130,7 +134,7 @@ function GraphPage() {
                   y={pos.y + 1}
                   textAnchor="middle"
                   dominantBaseline="central"
-                  fill={active ? "#ffffff" : "#1e293b"}
+                  fill={active ? "#ffffff" : "var(--foreground)"}
                   fontSize={11}
                   fontWeight={600}
                   style={{ pointerEvents: "none", userSelect: "none" }}
@@ -159,7 +163,7 @@ function GraphPage() {
                   width={DIM_W}
                   height={DIM_H}
                   rx={15}
-                  fill={active ? node.color : "#f1f5f9"}
+                  fill={active ? node.color : "var(--secondary)"}
                   stroke={node.color}
                   strokeWidth={active ? 2 : 1.2}
                   strokeDasharray="5 3"
@@ -170,7 +174,7 @@ function GraphPage() {
                   y={pos.y + 1}
                   textAnchor="middle"
                   dominantBaseline="central"
-                  fill={active ? "#ffffff" : "#475569"}
+                  fill={active ? "#ffffff" : "var(--muted-foreground)"}
                   fontSize={10}
                   fontWeight={500}
                   style={{ pointerEvents: "none", userSelect: "none" }}
